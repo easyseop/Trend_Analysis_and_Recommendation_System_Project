@@ -8,6 +8,8 @@
 from re import A
 from django.db import models
 import random
+from django.contrib.auth.models import User
+
 
 class AuthGroup(models.Model):
     name = models.CharField(unique=True, max_length=150)
@@ -78,10 +80,10 @@ class AuthUserUserPermissions(models.Model):
         unique_together = (('user', 'permission'),)
 
 
-class Demo(models.Model):
+class Data(models.Model):
     id = models.BigIntegerField(primary_key=True)
+    # saver = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.TextField(blank=True, null=True)
-    dong = models.TextField(blank=True, null=True)
     sort_x = models.TextField(blank=True, null=True)
     menu_x = models.TextField(blank=True, null=True)
     naver_review_list = models.TextField(blank=True, null=True)
@@ -92,12 +94,14 @@ class Demo(models.Model):
     kakao_review_list = models.TextField(blank=True, null=True)
     total_score = models.FloatField(blank=True, null=True)
     total_review_count = models.BigIntegerField(blank=True, null=True)
-    clustering = models.BigIntegerField(blank=True, null=True)
-    pos_rev_rate = models.FloatField(db_column='pos_rev_Rate', blank=True, null=True)  # Field name made lowercase.
+    category = models.BigIntegerField(blank=True, null=True)
+    cluster = models.BigIntegerField(blank=True, null=True)
+    review_score = models.FloatField(blank=True, null=True)
+    region_code = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'demo'
+        db_table = 'data'
     
     # 결과 페이지에서 첫번째 리뷰만 보여주기
     def review_summary(self):
@@ -109,6 +113,22 @@ class Demo(models.Model):
                 return review
         else:
             return self.naver_review_list
+    
+    # 상세 페이지에서 네이버 리뷰 보여주기
+    def naver_review(self):
+        if self.naver_review_list:
+            if '/' in self.naver_review_list:
+                return self.naver_review_list.split('/')
+        else:
+            return ''
+    
+    # 상세 페이지에서 카카오 리뷰 보여주기
+    def kakao_review(self):
+        if self.kakao_review_list:
+            if '/' in self.kakao_review_list:
+                return self.kakao_review_list.split('/')
+        else:
+            return ''
     
     # 음식점 내부 이미지 반복출력 위해 split 후 리스트로 반환
     def img_summary(self):
@@ -127,7 +147,20 @@ class Demo(models.Model):
         if self.img_food:
             if ',' in self.img_food:
                 return self.img_food.split(',')
+        else:
+            return "../static/assets/img/img_nothing.jpeg"
     
+    # 음식점 내부 이미지 반복출력
+    def rest_list(self):
+        if self.img_inner:
+            if ',' in self.img_inner:
+                return self.img_inner.split(',')
+        else:
+            return "../static/assets/img/img_nothing.jpeg"
+    
+    # total score 100%로 표시
+    def total_score_(self):
+        return int(self.total_score) * 20
 
 
 class DjangoAdminLog(models.Model):
@@ -175,10 +208,9 @@ class DjangoSession(models.Model):
         db_table = 'django_session'
 
 
-class MainDemo(models.Model):
+class MainData(models.Model):
     id = models.BigIntegerField(primary_key=True)
     name = models.TextField(blank=True, null=True)
-    dong = models.TextField(blank=True, null=True)
     sort_x = models.TextField(blank=True, null=True)
     menu_x = models.TextField(blank=True, null=True)
     naver_review_list = models.TextField(blank=True, null=True)
@@ -189,9 +221,11 @@ class MainDemo(models.Model):
     kakao_review_list = models.TextField(blank=True, null=True)
     total_score = models.FloatField(blank=True, null=True)
     total_review_count = models.BigIntegerField(blank=True, null=True)
-    clustering = models.BigIntegerField(blank=True, null=True)
-    pos_rev_rate = models.FloatField(db_column='pos_rev_Rate', blank=True, null=True)  # Field name made lowercase.
+    category = models.BigIntegerField(blank=True, null=True)
+    cluster = models.BigIntegerField(blank=True, null=True)
+    review_score = models.FloatField(blank=True, null=True)
+    region_code = models.BigIntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'main_demo'
+        db_table = 'main_data'
