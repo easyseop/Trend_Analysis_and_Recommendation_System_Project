@@ -20,6 +20,10 @@
 naver data : test_Multiprocessing.py
 kakao data : kakao_test(to dataframe).py
 ```
+2. 수집한 데이터를 통합하여 Raw data 생성
+```
+1-2.merge_csv.py
+```
 ## WebPage Dev.
 
 ### 실행
