@@ -9,9 +9,17 @@
 4. pandas
 5. numpy
 6. captum
-7. 
 
 
+
+
+## Data Collcetion
+
+1. 데이터 크롤링
+```
+naver data : test_Multiprocessing.py
+kakao data : kakao_test(to dataframe).py
+```
 ## WebPage Dev.
 
 ### 실행
